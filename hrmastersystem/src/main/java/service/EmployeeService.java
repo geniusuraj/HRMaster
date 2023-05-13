@@ -21,24 +21,31 @@ public class EmployeeService {
         em.getTransaction().commit();
     }
 
-    public void applyForLeave(EntityManager em, Employee employee, Date startDate, Date endDate) {
+    public void applyForLeave(EntityManager em, Employee employee, Date startDate, Date endDate, String reason) {
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setEmployee(employee);
         leaveRequest.setStartDate(startDate);
         leaveRequest.setEndDate(endDate);
+        leaveRequest.setReason(reason); // Add this line to set the reason
         leaveRequest.setStatus("Pending");
-        leaveRequest.setIsDeleted(0);
 
         em.getTransaction().begin();
         em.persist(leaveRequest);
         em.getTransaction().commit();
     }
 
+
     public List<LeaveRequest> viewLeaveStatus(EntityManager em, int employeeId) {
         TypedQuery<LeaveRequest> query = em.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.employee.id = :employeeId AND lr.isDeleted = 0", LeaveRequest.class);
         query.setParameter("employeeId", employeeId);
         return query.getResultList();
     }
+    public List<LeaveRequest> viewPendingLeaveRequests(EntityManager em, Employee employee) {
+        TypedQuery<LeaveRequest> query = em.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.employee = :employee AND lr.status = 'Pending' AND lr.isDeleted = 0", LeaveRequest.class);
+        query.setParameter("employee", employee);
+        return query.getResultList();
+    }
+
 
     public List<LeaveRequest> viewLeaveHistory(EntityManager em, int employeeId) {
         TypedQuery<LeaveRequest> query = em.createQuery("SELECT lr FROM LeaveRequest lr WHERE lr.employee.id = :employeeId", LeaveRequest.class);
@@ -49,9 +56,6 @@ public class EmployeeService {
     public double getTotalSalaryForMonth(EntityManager em, int employeeId, Date month) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(month);
-        int monthIndex = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-
         Employee employee = em.find(Employee.class, employeeId);
         if (employee != null && employee.getIsDeleted() == 0) {
             return employee.getSalary();

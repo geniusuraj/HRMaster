@@ -109,18 +109,19 @@ public class CommandLineInterface {
                         System.out.println("Department name updated successfully.");
                         break;
                     case 4:
-                        // Register new employee
                         System.out.print("Enter employee's email (username): ");
-                        String email = scanner.nextLine();
+                        String email = scanner.next();
                         System.out.print("Enter employee's department ID: ");
-                        int empDepartmentId = scanner.nextInt();
-                        scanner.nextLine(); // Consume newline character
+                        departmentId = scanner.nextInt(); 
                         System.out.print("Enter employee's salary: ");
                         double salary = scanner.nextDouble();
-                        scanner.nextLine(); // Consume newline character
 
-                        admin.registerNewEmployee(entityManager, email, empDepartmentId, salary);
-                        System.out.println("Employee registered successfully.");
+                        try {
+                            admin.registerNewEmployee(entityManager, email, departmentId, salary);
+                            System.out.println("Employee registered successfully.");
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
                         break;
                     case 5:
                         // Change department of employee
@@ -227,7 +228,8 @@ public class CommandLineInterface {
                         break;
                     case 4:
                         // View leave history
-                        List<LeaveRequest> leaveHistory = employeeService.viewLeaveHistory(entityManager, employee);
+                        List<LeaveRequest> leaveHistory = employeeService.viewLeaveHistory(entityManager, employee.getId());
+
                         System.out.println("\nLeave History:");
                         for (LeaveRequest leaveRequest : leaveHistory) {
                             System.out.println(leaveRequest.getId() + " - " + sdf.format(leaveRequest.getStartDate()) + " to " + sdf.format(leaveRequest.getEndDate()) + " - " + leaveRequest.getReason() + " - " + leaveRequest.getStatus() + " - " + leaveRequest.getRemark());

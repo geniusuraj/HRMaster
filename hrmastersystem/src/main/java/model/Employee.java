@@ -21,17 +21,19 @@ public class Employee {
     @Temporal(TemporalType.DATE)
     private Date dateOfJoining;
 
-
+    private int isDeleted;
+	private String email;
+    
     public Employee() {}
     public void setEmail(String email) {
         this.username = email;
     }
 
-    public Employee(String username, String password, double salary, Department department) {
-        this.username = username;
+    public Employee(String email, String password, Department department, double salary) {
+        this.email = email;
         this.password = password;
-        this.salary = salary;
         this.department = department;
+        this.salary = salary;
     }
     
 
@@ -74,4 +76,15 @@ public class Employee {
     public void setDepartment(Department department) {
         this.department = department;
     }
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+    
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+	public void setDateOfJoining(Date date) {
+		// TODO Auto-generated method stub
+		
+	}
 }
