@@ -5,6 +5,8 @@ import model.Employee;
 import model.LeaveRequest;
 
 import jakarta.persistence.*;
+
+import java.sql.Date;
 import java.util.List;
 
 public class Admin {
@@ -55,7 +57,7 @@ public class Admin {
             throw new IllegalArgumentException("Invalid department ID.");
         }
         Employee employee = new Employee(email, "123456", department, salary);
-        employee.setDateOfJoining(new Date()); // Set the current date as the date of joining
+        employee.setDateOfJoining(new Date(departmentId)); // Set the current date as the date of joining
         entityManager.getTransaction().begin();
         entityManager.persist(employee);
         entityManager.getTransaction().commit();
