@@ -1,55 +1,56 @@
 package model;
 
 import jakarta.persistence.*;
-
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "departments")
 public class Department {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(name = "department_name", nullable = false)
-    private String departmentName;
-    @Column(name = "is_deleted", nullable = false)
+    private String name;
+
+
+
+    @Column(name = "is_deleted")
     private int isDeleted;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    private List<Employee> employees;
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Employee> employees = new HashSet<>();
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getDepartmentName() {
-		return departmentName;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getIsDeleted() {
-		return isDeleted;
-	}
+    public int getIsDeleted() {
+        return isDeleted;
+    }
 
-	public void setIsDeleted(int isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
-	public List<Employee> getEmployees() {
-		return employees;
-	}
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
 
-	public void setEmployees(List<Employee> employees) {
-		this.employees = employees;
-	}
-
-    
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
 }
